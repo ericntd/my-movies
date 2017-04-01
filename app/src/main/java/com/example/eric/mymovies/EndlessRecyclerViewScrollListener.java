@@ -56,7 +56,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             int totalItemCount = mLayoutManager.getItemCount();
 
             // If it’s still loading, we check to see if the dataset count has
-            // changed, if so we conclude it has finished loading and search the current page
+            // changed, if so we conclude it has finished loading and resetSearch the current page
             // number and total item count.
             if (totalItemCount > previousTotalItemCount) {
                 Logger.i("loading finished");

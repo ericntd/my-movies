@@ -31,15 +31,6 @@ class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieVi
     private String mImageSize;
     private String mBaseImageUrl;
 
-    public MovieSearchAdapter() {
-    }
-
-    public void add(ArrayList<Movie> movies) {
-        int oldSize = mMovies.size();
-        mMovies.addAll(movies);
-        notifyItemRangeChanged(oldSize, movies.size());
-    }
-
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item = LayoutInflater.from(parent.getContext()).
@@ -56,6 +47,8 @@ class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieVi
         }
         if (!TextUtils.isEmpty(imageSrc)) {
             Picasso.with(holder.itemView.getContext()).load(imageSrc).into(holder.imageV);
+        } else {
+            holder.imageV.setImageDrawable(null);// prevent repeated images
         }
         holder.titleV.setText(item.getTitle());
         if (!TextUtils.isEmpty(item.getOverview())) {
@@ -68,13 +61,19 @@ class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieVi
         return mMovies.size();
     }
 
-    public void setImageConfig(String baseUrl, String imageSize) {
+    void setImageConfig(String baseUrl, String imageSize) {
         this.mImageSize = imageSize;
         this.mBaseImageUrl = baseUrl;
         notifyDataSetChanged();
     }
 
-    public void clear() {
+    void addItems(ArrayList<Movie> movies) {
+        int oldSize = mMovies.size();
+        mMovies.addAll(movies);
+        notifyItemRangeChanged(oldSize, movies.size());
+    }
+
+    void clear() {
         mMovies = new ArrayList<>();
         notifyDataSetChanged();
     }

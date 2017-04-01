@@ -2,17 +2,14 @@ package com.example.eric.mymovies.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.example.eric.mymovies.MyEndlessRVScrollListener;
 import com.example.eric.mymovies.R;
@@ -107,7 +104,8 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
 
     private void onFetchedConfiguration(Response<ConfigurationResponse> response) {
         ImageOptions options = response.body().getImages();
-        // Second smallest poster size is optimal here, now it's 154px, even if it changes, should be around there
+        // Assumption: second smallest poster size is optimal here, now it's 154px, even if it changes, should still be
+        // good
         mListItemImageSize = options.getPosterSizes().get(2);
         mAdapter.setImageConfig(options.getBaseUrl(), mListItemImageSize);
     }
@@ -139,6 +137,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     }
 
     private void onErrorConfiguration() {
+        Logger.w("onErrorConfiguration");
     }
 
     private void onFetchedMovies(Response<MoviesResponse> response) {
@@ -158,7 +157,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     }
 
     private void render(ArrayList<Movie> movies) {
-        mAdapter.add(movies);
+        mAdapter.addItems(movies);
     }
 
     private void onErrorMovies(String errorMessage) {
@@ -197,13 +196,16 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         super.onDestroyView();
     }
 
-    public void search(String query) {
-        this.mQuery = query;
+    public void resetSearch(String query) {
+        mQuery = query;
         mCurrentPage = 1;
         mAdapter.clear();
         fetchMovies();
     }
 
+    /**
+     * Interface to communicate back to the activity
+     */
     public interface MovieSearchFragmentCallback {
         void onFetchedMovies();
     }

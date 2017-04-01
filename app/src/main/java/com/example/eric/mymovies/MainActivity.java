@@ -14,10 +14,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements Runnable, MovieSearchFragment.MovieSearchFragmentCallback {
-    private final int TIME_BTWN_TYPING_MS = 450;
+
 
     /**
-     * value from the search bar
+     * Search query
      */
     private String mQuery = "big";
 
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements Runnable, MovieSe
             if (newText.isEmpty()) {
                 progressBar.setVisibility(View.GONE);
             } else {
+                final int TIME_BTWN_TYPING_MS = 450;
                 mHandler.postDelayed(MainActivity.this, TIME_BTWN_TYPING_MS);
             }
             return true;
@@ -82,23 +83,13 @@ public class MainActivity extends AppCompatActivity implements Runnable, MovieSe
         Logger.i("resetSearch");
         if (mFrag != null) {
             progressBar.setVisibility(View.VISIBLE);
-            mFrag.search(mQuery);
+            mFrag.resetSearch(mQuery);
         }
     }
 
     private void render() {
         searchView.setQuery(mQuery, true);
         searchView.setOnQueryTextListener(mSearchQueryListener);
-//        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//            @Override
-//            public boolean onClose() {
-//                mHandler.removeCallbacks(SearchActivity.this);
-//                mRecyclerViewSearch2.setVisibility(View.GONE);
-//                progressBar.setVisibility(View.GONE);
-//                mAdapter2.clear();
-//                return true;
-//            }
-//        });
 
         mFrag = MovieSearchFragment.newInstance(mQuery);
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_movies, mFrag).commit();
@@ -110,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements Runnable, MovieSe
         resetSearch();
     }
 
+    /**
+     * Hide the progressbar as soon as the 1st page of movies are fetched
+     */
     @Override
     public void onFetchedMovies() {
         progressBar.setVisibility(View.GONE);
