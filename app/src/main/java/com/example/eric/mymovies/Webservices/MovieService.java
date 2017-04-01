@@ -19,5 +19,5 @@ public interface MovieService {
     MovieService service = MyREST.retrofit.create(MovieService.class);
 
     @GET("search/movie?api_key=" + BuildConfig.API_KEY)
-    Call<MoviesResponse> searchMovies(@Query("query") String query);
+    Call<MoviesResponse> searchMovies(@Query("query") String query, @Query("page") int pageNo);
 }
