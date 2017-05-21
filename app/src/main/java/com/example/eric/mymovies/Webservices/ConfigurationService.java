@@ -13,7 +13,6 @@ import retrofit2.http.Query;
  */
 
 public interface ConfigurationService {
-    ConfigurationService service = MyREST.retrofit.create(ConfigurationService.class);
 
     @GET("configuration?api_key=" + BuildConfig.API_KEY)
     Call<ConfigurationResponse> fetchConfiguration();

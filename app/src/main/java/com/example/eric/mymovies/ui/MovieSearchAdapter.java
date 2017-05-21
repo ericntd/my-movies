@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  * Created by eric on 1/4/17.
  */
 
-class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieViewHolder> {
+public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieViewHolder> {
     private List<Movie> mMovies = new ArrayList<>();
     private String mImageSize;
     private String mBaseImageUrl;
@@ -61,19 +61,19 @@ class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieVi
         return mMovies.size();
     }
 
-    void setImageConfig(String baseUrl, String imageSize) {
+    public void setImageConfig(String baseUrl, String imageSize) {
         this.mImageSize = imageSize;
         this.mBaseImageUrl = baseUrl;
         notifyDataSetChanged();
     }
 
-    void addItems(ArrayList<Movie> movies) {
+    public void addItems(ArrayList<Movie> movies) {
         int oldSize = mMovies.size();
         mMovies.addAll(movies);
         notifyItemRangeChanged(oldSize, movies.size());
     }
 
-    void clear() {
+    public void clear() {
         mMovies = new ArrayList<>();
         notifyDataSetChanged();
     }

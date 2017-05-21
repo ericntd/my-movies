@@ -1,6 +1,7 @@
-package com.example.eric.mymovies.ui;
+package com.example.eric.mymovies.search;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.eric.mymovies.MyEndlessRVScrollListener;
+import com.example.eric.mymovies.MyApp;
+import com.example.eric.mymovies.common.MyEndlessRVScrollListener;
 import com.example.eric.mymovies.R;
 import com.example.eric.mymovies.Webservices.ConfigurationService;
 import com.example.eric.mymovies.Webservices.MovieService;
@@ -19,23 +21,31 @@ import com.example.eric.mymovies.models.ConfigurationResponse;
 import com.example.eric.mymovies.models.ImageOptions;
 import com.example.eric.mymovies.models.Movie;
 import com.example.eric.mymovies.models.MoviesResponse;
+import com.example.eric.mymovies.ui.MovieSearchAdapter;
 import com.example.eric.mymovies.utils.MyJsonResponseUtils;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-/**
- * Created by eric on 1/4/17.
- */
+import retrofit2.Retrofit;
 
 public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollListener.OnScrollEndListener {
     private static final String ARG_QUERY = "ARG_QUERY";
+
+    @Inject
+    OkHttpClient mOkHttpClient;
+    @Inject
+    SharedPreferences sharedPreferences;
+    @Inject
+    Retrofit mRetrofit;
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
@@ -45,7 +55,6 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     private int mCurrentPage = 1;
     private int mTotalPageCount;
     private MovieSearchAdapter mAdapter;
-    private String mListItemImageSize;
     private MovieSearchFragmentCallback mListener;
 
     public static MovieSearchFragment newInstance(String query) {
@@ -60,6 +69,8 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        ((MyApp) getActivity().getApplication()).getNetComponent().inject(this);
+
         super.onCreate(savedInstanceState);
         String tmp = getArguments().getString(ARG_QUERY);
         if (!TextUtils.isEmpty(tmp)) mQuery = tmp;
@@ -86,7 +97,8 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     }
 
     private void fetchConfiguration() {
-        Call<ConfigurationResponse> call = ConfigurationService.service.fetchConfiguration();
+        ConfigurationService service = mRetrofit.create(ConfigurationService.class);
+        Call<ConfigurationResponse> call = service.fetchConfiguration();
         call.enqueue(new Callback<ConfigurationResponse>() {
             @Override
             public void onResponse(Call<ConfigurationResponse> call,
@@ -96,7 +108,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
 
             @Override
             public void onFailure(Call<ConfigurationResponse> call, Throwable t) {
-                Logger.e( "onFailure", t);
+                Logger.e("onFailure", t);
                 onErrorConfiguration();
             }
         });
@@ -106,7 +118,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         ImageOptions options = response.body().getImages();
         // Assumption: second smallest poster size is optimal here, now it's 154px, even if it changes, should still be
         // good
-        mListItemImageSize = options.getPosterSizes().get(2);
+        String mListItemImageSize = options.getPosterSizes().get(2);
         mAdapter.setImageConfig(options.getBaseUrl(), mListItemImageSize);
     }
 
@@ -120,7 +132,8 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
 
     private void fetchMovies() {
         Logger.i("fetchMovies");
-        Call<MoviesResponse> call = MovieService.service.searchMovies(mQuery, mCurrentPage);
+        MovieService service = mRetrofit.create(MovieService.class);
+        Call<MoviesResponse> call = service.searchMovies(mQuery, mCurrentPage);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call,
@@ -130,7 +143,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                Logger.e( "onFailure", t);
+                Logger.e("onFailure", t);
                 onErrorMovies();
             }
         });
