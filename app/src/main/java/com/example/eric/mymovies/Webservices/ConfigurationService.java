@@ -1,12 +1,10 @@
-package com.example.eric.mymovies.Webservices;
+package com.example.eric.mymovies.webservices;
 
 import com.example.eric.mymovies.BuildConfig;
 import com.example.eric.mymovies.models.ConfigurationResponse;
-import com.example.eric.mymovies.models.MoviesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
 
 /**
  * Created by eric on 1/4/17.

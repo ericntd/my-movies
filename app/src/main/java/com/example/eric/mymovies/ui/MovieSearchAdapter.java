@@ -70,7 +70,7 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
         notifyDataSetChanged();
     }
 
-    public void addItems(ArrayList<Movie> movies) {
+    public void addItems(List<Movie> movies) {
         int oldSize = mMovies.size();
         mMovies.addAll(movies);
         notifyItemRangeChanged(oldSize, movies.size());

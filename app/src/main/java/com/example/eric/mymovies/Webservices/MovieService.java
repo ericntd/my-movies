@@ -1,11 +1,7 @@
-package com.example.eric.mymovies.Webservices;
+package com.example.eric.mymovies.webservices;
 
 import com.example.eric.mymovies.BuildConfig;
-import com.example.eric.mymovies.models.Movie;
 import com.example.eric.mymovies.models.MoviesResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

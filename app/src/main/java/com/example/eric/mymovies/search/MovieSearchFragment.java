@@ -1,22 +1,21 @@
 package com.example.eric.mymovies.search;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.eric.mymovies.MyApp;
 import com.example.eric.mymovies.common.MyEndlessRVScrollListener;
 import com.example.eric.mymovies.R;
-import com.example.eric.mymovies.Webservices.ConfigurationService;
-import com.example.eric.mymovies.Webservices.MovieService;
 import com.example.eric.mymovies.models.ConfigurationResponse;
 import com.example.eric.mymovies.models.ImageOptions;
 import com.example.eric.mymovies.models.Movie;
@@ -25,19 +24,17 @@ import com.example.eric.mymovies.ui.MovieSearchAdapter;
 import com.example.eric.mymovies.utils.MyJsonResponseUtils;
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollListener.OnScrollEndListener {
+public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollListener.OnScrollEndListener,
+        MovieSearchMvpView {
     private static final String ARG_QUERY = "ARG_QUERY";
 
     @Inject
@@ -57,6 +54,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     private int mTotalPageCount;
     private MovieSearchAdapter mAdapter;
     private MovieSearchFragmentCallback mListener;
+    private MovieSearchPresenter mPresenter;
 
     public static MovieSearchFragment newInstance(String query) {
 
@@ -76,6 +74,9 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         String tmp = getArguments().getString(ARG_QUERY);
         if (!TextUtils.isEmpty(tmp)) mQuery = tmp;
         mAdapter = new MovieSearchAdapter();
+        mPresenter = new MovieSearchPresenter(mRetrofit);
+        mPresenter.attachView(this);
+
         fetchConfiguration();
     }
 
@@ -97,30 +98,14 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         }
     }
 
-    private void fetchConfiguration() {
-        ConfigurationService service = mRetrofit.create(ConfigurationService.class);
-        Call<ConfigurationResponse> call = service.fetchConfiguration();
-        call.enqueue(new Callback<ConfigurationResponse>() {
-            @Override
-            public void onResponse(Call<ConfigurationResponse> call,
-                                   Response<ConfigurationResponse> response) {
-                onFetchedConfiguration(response);
-            }
-
-            @Override
-            public void onFailure(Call<ConfigurationResponse> call, Throwable t) {
-                Logger.e("onFailure", t);
-                onErrorConfiguration();
-            }
-        });
+    @Override
+    public void onDestroy() {
+        mPresenter.detachView();
+        super.onDestroy();
     }
 
-    private void onFetchedConfiguration(Response<ConfigurationResponse> response) {
-        ImageOptions options = response.body().getImages();
-        // Assumption: second smallest poster size is optimal here, now it's 154px, even if it changes, should still be
-        // good
-        String mListItemImageSize = options.getPosterSizes().get(2);
-        mAdapter.setImageConfig(options.getBaseUrl(), mListItemImageSize);
+    private void fetchConfiguration() {
+        mPresenter.fetchConfiguration();
     }
 
     private void initViews() {
@@ -133,60 +118,15 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
 
     private void fetchMovies() {
         Logger.i("fetchMovies");
-        MovieService service = mRetrofit.create(MovieService.class);
-        Call<MoviesResponse> call = service.searchMovies(mQuery, mCurrentPage);
-        call.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse> call,
-                                   Response<MoviesResponse> response) {
-                onFetchedMovies(response);
-            }
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                Logger.e("onFailure", t);
-                onErrorMovies();
-            }
-        });
+        mPresenter.searchMovies(mQuery, mCurrentPage);
     }
 
-    private void onErrorConfiguration() {
-        Logger.w("onErrorConfiguration");
-    }
-
-    private void onFetchedMovies(Response<MoviesResponse> response) {
-        Logger.i("onFetchedMovies");
-        setLoading(false);
-        if (mListener != null) mListener.onFetchedMovies();
-        if (response.isSuccessful()) {
-            MoviesResponse tmp = response.body();
-            if (tmp.getResults() == null || tmp.getResults().size() == 0) {
-                messageNoResult.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            } else {
-                messageNoResult.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-            ArrayList<Movie> movies = tmp.getResults();
-            mCurrentPage = tmp.getPage();
-            mTotalPageCount = tmp.getTotalPages();
-            render(movies);
-        } else {
-            String errorMessage = MyJsonResponseUtils.extractErrMsg(response.errorBody());
-            onErrorMovies(errorMessage);
-        }
-    }
-
-    private void render(ArrayList<Movie> movies) {
+    private void render(List<Movie> movies) {
         mAdapter.addItems(movies);
     }
 
     private void onErrorMovies(String errorMessage) {
         Logger.w("onErrorMovies %s", errorMessage);
-    }
-
-    private void onErrorMovies() {
-        Logger.w("onErrorMovies");
     }
 
     /**
@@ -222,6 +162,64 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         mCurrentPage = 1;
         mAdapter.clear();
         fetchMovies();
+    }
+
+    @Override
+    public void showMovies(Response<MoviesResponse> response) {
+        setLoading(false);
+        hideKeyboard();
+        if (mListener != null) mListener.onFetchedMovies();
+        if (response.isSuccessful()) {
+            MoviesResponse tmp = response.body();
+            if (tmp.getResults() == null || tmp.getResults().size() == 0) {
+                messageNoResult.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                messageNoResult.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+            List<Movie> movies = tmp.getResults();
+            mCurrentPage = tmp.getPage();
+            mTotalPageCount = tmp.getTotalPages();
+            render(movies);
+        } else {
+            String errorMessage = MyJsonResponseUtils.extractErrMsg(response.errorBody());
+            onErrorMovies(errorMessage);
+        }
+    }
+
+    @Override
+    public void showMessage(int stringId) {
+        setLoading(false);
+        hideKeyboard();
+    }
+
+    @Override
+    public void showProgressIndicator() {
+        setLoading(true);
+    }
+
+    @Override
+    public void updateConfiguration(Response<ConfigurationResponse> response) {
+        ImageOptions options = response.body().getImages();
+        // Assumption: second smallest poster size is optimal here, now it's 154px, even if it changes, should still be
+        // good
+        String mListItemImageSize = options.getPosterSizes().get(2);
+        mAdapter.setImageConfig(options.getBaseUrl(), mListItemImageSize);
+    }
+
+    private void hideKeyboard() {
+        if (getActivity() == null || !isAdded()) {
+            return;
+        }
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context
+                .INPUT_METHOD_SERVICE);
+        View rootView = getView();
+        if (rootView != null) {
+            Log.v(this.getClass().getSimpleName(), "root view not null " + rootView);
+            rootView.requestFocus();
+            imm.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
+        }
     }
 
     /**

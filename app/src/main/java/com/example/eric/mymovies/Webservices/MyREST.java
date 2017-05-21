@@ -1,16 +1,8 @@
-package com.example.eric.mymovies.Webservices;
+package com.example.eric.mymovies.webservices;
 
 import com.example.eric.mymovies.BuildConfig;
-import com.orhanobut.logger.Logger;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
