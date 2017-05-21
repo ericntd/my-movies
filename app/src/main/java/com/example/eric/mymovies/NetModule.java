@@ -50,7 +50,11 @@ public class NetModule {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel
                 (HttpLoggingInterceptor
                         .Level.BODY);
+        HttpLoggingInterceptor loggingInterceptor2 = new HttpLoggingInterceptor().setLevel
+                (HttpLoggingInterceptor
+                        .Level.HEADERS);
         builder.addInterceptor(loggingInterceptor);
+        builder.addNetworkInterceptor(loggingInterceptor2);
         return builder.build();
     }
 

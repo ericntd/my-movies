@@ -54,7 +54,7 @@ public class Movie implements Parcelable {
     private boolean video;
     @SerializedName("vote_average")
     @Expose
-    private double voteAverage;
+    private float voteAverage;
     public final static Parcelable.Creator<Movie> CREATOR = new Creator<Movie>() {
 
 
@@ -76,7 +76,7 @@ public class Movie implements Parcelable {
             instance.popularity = ((double) in.readValue((double.class.getClassLoader())));
             instance.voteCount = ((int) in.readValue((int.class.getClassLoader())));
             instance.video = ((boolean) in.readValue((boolean.class.getClassLoader())));
-            instance.voteAverage = ((double) in.readValue((double.class.getClassLoader())));
+            instance.voteAverage = ((float) in.readValue((float.class.getClassLoader())));
             return instance;
         }
 
@@ -110,7 +110,7 @@ public class Movie implements Parcelable {
      */
     public Movie(String posterPath, boolean adult, String overview, String releaseDate, List<Integer> genreIds, int
             id, String originalTitle, String originalLanguage, String title, String backdropPath, double popularity,
-                 int voteCount, boolean video, double voteAverage) {
+                 int voteCount, boolean video, float voteAverage) {
         super();
         this.posterPath = posterPath;
         this.adult = adult;
@@ -232,11 +232,11 @@ public class Movie implements Parcelable {
         this.video = video;
     }
 
-    public double getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(double voteAverage) {
+    public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
 

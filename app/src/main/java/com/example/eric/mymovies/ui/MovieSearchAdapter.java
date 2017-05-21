@@ -1,6 +1,7 @@
 package com.example.eric.mymovies.ui;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -50,6 +51,12 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
         if (!TextUtils.isEmpty(item.getOverview())) {
             holder.descV.setText(item.getOverview());
         }
+        if (Float.compare(item.getVoteAverage(), 0f) > 0) {
+            holder.ratingBar.setRating(item.getVoteAverage());
+            holder.ratingBar.setVisibility(View.VISIBLE);
+        } else {
+            holder.ratingBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -81,6 +88,8 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
         ImageView imageV;
         @BindView(R.id.text_desc)
         TextView descV;
+        @BindView(R.id.ratingbar)
+        AppCompatRatingBar ratingBar;
 
         MovieViewHolder(View itemView) {
             super(itemView);
