@@ -22,10 +22,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by eric on 1/4/17.
- */
-
 public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieViewHolder> {
     private List<Movie> mMovies = new ArrayList<>();
     private String mImageSize;

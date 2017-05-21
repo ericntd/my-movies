@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Movies</string>
     <string name="search_hint">Search</string>
+    <string name="text_no_result">No movie found</string>
 </resources>

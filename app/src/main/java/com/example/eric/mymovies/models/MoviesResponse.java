@@ -6,10 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by eric on 1/4/17.
- */
-
 public class MoviesResponse {
     @SerializedName("page")
     @Expose

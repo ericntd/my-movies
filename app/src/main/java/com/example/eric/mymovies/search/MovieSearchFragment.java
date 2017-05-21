@@ -41,15 +41,16 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     private static final String ARG_QUERY = "ARG_QUERY";
 
     @Inject
-    OkHttpClient mOkHttpClient;
-    @Inject
-    SharedPreferences sharedPreferences;
-    @Inject
     Retrofit mRetrofit;
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
-
+    @BindView(R.id.message_no_result)
+    View messageNoResult;
+    /**
+     * Empty string can't be used so we need a starter keyword
+     * why "big"? No particular reason, it's arbitrary
+     */
     private String mQuery = "big";
     private MyEndlessRVScrollListener mEndlessScrollListener;
     private int mCurrentPage = 1;
@@ -159,6 +160,13 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         if (mListener != null) mListener.onFetchedMovies();
         if (response.isSuccessful()) {
             MoviesResponse tmp = response.body();
+            if (tmp.getResults() == null || tmp.getResults().size() == 0) {
+                messageNoResult.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                messageNoResult.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
             ArrayList<Movie> movies = tmp.getResults();
             mCurrentPage = tmp.getPage();
             mTotalPageCount = tmp.getTotalPages();

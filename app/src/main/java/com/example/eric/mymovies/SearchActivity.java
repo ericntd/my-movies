@@ -1,6 +1,5 @@
 package com.example.eric.mymovies;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,14 +10,11 @@ import android.widget.ProgressBar;
 import com.example.eric.mymovies.search.MovieSearchFragment;
 import com.orhanobut.logger.Logger;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
 
-public class MainActivity extends AppCompatActivity implements Runnable, MovieSearchFragment.MovieSearchFragmentCallback {
-
+public class SearchActivity extends AppCompatActivity implements Runnable, MovieSearchFragment.MovieSearchFragmentCallback {
+    public final int TIME_BETWEEN_TYPING_MS = 450;
     /**
      * Search query
      */
@@ -58,10 +54,9 @@ public class MainActivity extends AppCompatActivity implements Runnable, MovieSe
     }
 
     /**
-     * Handler to trigger search every {@link #TIME_BTWN_TYPING_MS} milliseconds after user stops typing
+     * Handler to trigger search every {@link #TIME_BETWEEN_TYPING_MS} milliseconds after user stops typing
      */
     private Handler mHandler;
-    final int TIME_BTWN_TYPING_MS = 450;
     SearchView.OnQueryTextListener mSearchQueryListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -75,12 +70,12 @@ public class MainActivity extends AppCompatActivity implements Runnable, MovieSe
         @Override
         public boolean onQueryTextChange(String newText) {
             Logger.i("onQueryTextSubmit %s", newText);
-            mHandler.removeCallbacks(MainActivity.this);
+            mHandler.removeCallbacks(SearchActivity.this);
             mQuery = newText;
             if (newText.isEmpty()) {
                 progressBar.setVisibility(View.GONE);
             } else {
-                mHandler.postDelayed(MainActivity.this, TIME_BTWN_TYPING_MS);
+                mHandler.postDelayed(SearchActivity.this, TIME_BETWEEN_TYPING_MS);
             }
             return true;
         }
