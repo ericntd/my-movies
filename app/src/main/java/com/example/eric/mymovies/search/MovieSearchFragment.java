@@ -20,7 +20,6 @@ import com.example.eric.mymovies.models.ConfigurationResponse;
 import com.example.eric.mymovies.models.ImageOptions;
 import com.example.eric.mymovies.models.Movie;
 import com.example.eric.mymovies.models.MoviesResponse;
-import com.example.eric.mymovies.ui.MovieSearchAdapter;
 import com.example.eric.mymovies.utils.MyJsonResponseUtils;
 import com.orhanobut.logger.Logger;
 

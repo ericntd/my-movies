@@ -1,6 +1,5 @@
-package com.example.eric.mymovies.ui;
+package com.example.eric.mymovies.search;
 
-import android.content.Context;
 import android.support.v7.widget.AppCompatRatingBar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,10 +11,7 @@ import android.widget.TextView;
 
 import com.example.eric.mymovies.R;
 import com.example.eric.mymovies.models.Movie;
-import com.orhanobut.logger.Logger;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
