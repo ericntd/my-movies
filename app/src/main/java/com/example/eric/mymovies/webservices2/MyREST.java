@@ -1,4 +1,4 @@
-package com.example.eric.mymovies.webservices;
+package com.example.eric.mymovies.webservices2;
 
 import com.example.eric.mymovies.BuildConfig;
 
@@ -10,9 +10,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by eric on 1/4/17.
+ * This was traditionally used in a non-dagger approach
  */
-
+@Deprecated
 public class MyREST {
     private static HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel
             (HttpLoggingInterceptor

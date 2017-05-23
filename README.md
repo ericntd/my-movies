@@ -1,10 +1,15 @@
 # Overview
-- Model-View-Presenter (MVP) example with Espresso tests
+## The app
+- Let you search movies on [TheMovieDb](https://www.themoviedb.org) by keyword and list the results
+## The code
+- Model-View-Presenter (MVP) architecture with Espresso tests
 - Demonstration of an API-back app (not a single Helloworld text view one) which is simple yet relatable enough
-- The use of https://www.themoviedb.org/'s API, please sign up to get your own access token
+- The use of [TheMovieDb](https://www.themoviedb.org)'s API, please sign up to get your own access token
 
 # What are included?
-- Dagger - to provide OkHttpClient with caching for Retrofit and to provide a mock service (for testing with Roboelectric) later on
+- Dagger - to provide a Retrofit service with local caching for the app
+  - Without it, it's difficult to pass a context object to the OkHttpClient powering Retrofit
+  - Without it, it's difficult to swap the real service with a "mock" one later on in a non-UI/ logics unit test (most likely with Robolectric) later on
 
 # What are not included?
 - RxJava - for simplicity and focus on the MVP demonstration, will create a separate project with RxJava

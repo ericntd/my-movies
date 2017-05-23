@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.example.eric.mymovies.Presenter;
 import com.example.eric.mymovies.R;
-import com.example.eric.mymovies.webservices.ConfigurationService;
-import com.example.eric.mymovies.webservices.MovieService;
+import com.example.eric.mymovies.webservices2.ConfigurationService;
+import com.example.eric.mymovies.webservices2.MovieService;
 import com.example.eric.mymovies.models.ConfigurationResponse;
 import com.example.eric.mymovies.models.MoviesResponse;
 import com.orhanobut.logger.Logger;
@@ -18,11 +18,18 @@ import retrofit2.Retrofit;
 
 public class MovieSearchPresenter implements Presenter<MovieSearchMvpView> {
 
-    private final Retrofit mRetrofit;
+    private final ConfigurationService mConfigService;
+    //    private Retrofit mRetrofit;
+    private final MovieService mMovieService;
     private MovieSearchMvpView searchMvpView;
 
-    public MovieSearchPresenter(Retrofit retrofit) {
-        mRetrofit = retrofit;
+//    public MovieSearchPresenter(Retrofit retrofit) {
+//        mRetrofit = retrofit;
+//    }
+
+    public MovieSearchPresenter(MovieService service, ConfigurationService configService) {
+        mMovieService = service;
+        mConfigService = configService;
     }
 
     @Override
@@ -39,8 +46,8 @@ public class MovieSearchPresenter implements Presenter<MovieSearchMvpView> {
         if (TextUtils.isEmpty(query) || query.trim().isEmpty()) return;
 
         searchMvpView.showProgressIndicator();
-        MovieService service = mRetrofit.create(MovieService.class);
-        Call<MoviesResponse> call = service.searchMovies(query, pageNo);
+//        MovieService service = mRetrofit.create(MovieService.class);
+        Call<MoviesResponse> call = mMovieService.searchMovies(query, pageNo);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call,
@@ -64,8 +71,7 @@ public class MovieSearchPresenter implements Presenter<MovieSearchMvpView> {
      * The view can then subscribe to the change ot the configuration
      */
     public void fetchConfiguration() {
-        ConfigurationService service = mRetrofit.create(ConfigurationService.class);
-        Call<ConfigurationResponse> call = service.fetchConfiguration();
+        Call<ConfigurationResponse> call = mConfigService.fetchConfiguration();
         call.enqueue(new Callback<ConfigurationResponse>() {
             @Override
             public void onResponse(Call<ConfigurationResponse> call,

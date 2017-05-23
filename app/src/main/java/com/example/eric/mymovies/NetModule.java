@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.example.eric.mymovies.webservices2.ConfigurationService;
+import com.example.eric.mymovies.webservices2.MovieService;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -66,5 +68,17 @@ public class NetModule {
                 .baseUrl(mBaseUrl)
                 .client(okHttpClient)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    MovieService provideMovieService(Retrofit retrofit) {
+        return retrofit.create(MovieService.class);
+    }
+
+    @Provides
+    @Singleton
+    ConfigurationService provideConfigurationService(Retrofit retrofit) {
+        return retrofit.create(ConfigurationService.class);
     }
 }

@@ -21,6 +21,8 @@ import com.example.eric.mymovies.models.ImageOptions;
 import com.example.eric.mymovies.models.Movie;
 import com.example.eric.mymovies.models.MoviesResponse;
 import com.example.eric.mymovies.utils.MyJsonResponseUtils;
+import com.example.eric.mymovies.webservices2.ConfigurationService;
+import com.example.eric.mymovies.webservices2.MovieService;
 import com.orhanobut.logger.Logger;
 
 import java.util.List;
@@ -37,7 +39,9 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
     private static final String ARG_QUERY = "ARG_QUERY";
 
     @Inject
-    Retrofit mRetrofit;
+    MovieService mMovieService;
+    @Inject
+    ConfigurationService mConfigService;
 
     @BindView(R.id.recyclerview)
     RecyclerView recyclerView;
@@ -73,7 +77,7 @@ public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollLi
         String tmp = getArguments().getString(ARG_QUERY);
         if (!TextUtils.isEmpty(tmp)) mQuery = tmp;
         mAdapter = new MovieSearchAdapter();
-        mPresenter = new MovieSearchPresenter(mRetrofit);
+        mPresenter = new MovieSearchPresenter(mMovieService, mConfigService);
         mPresenter.attachView(this);
 
         fetchConfiguration();
