@@ -1,4 +1,4 @@
-package com.example.eric.mymovies;
+package com.example.eric.mymovies.common;
 
 public interface Presenter<V> {
 

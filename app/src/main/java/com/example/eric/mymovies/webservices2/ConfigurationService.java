@@ -1,7 +1,6 @@
 package com.example.eric.mymovies.webservices2;
 
 import com.example.eric.mymovies.BuildConfig;
-import com.example.eric.mymovies.models.ConfigurationResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

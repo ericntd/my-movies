@@ -2,6 +2,10 @@ package com.example.eric.mymovies;
 
 import android.app.Application;
 
+import com.example.eric.mymovies.di.AppModule;
+import com.example.eric.mymovies.di.NetComponent;
+import com.example.eric.mymovies.di.NetModule;
+
 public class MyApp extends Application {
     private NetComponent mNetComponent;
 

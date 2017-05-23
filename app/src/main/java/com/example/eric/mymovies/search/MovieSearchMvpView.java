@@ -1,10 +1,7 @@
 package com.example.eric.mymovies.search;
 
-import com.example.eric.mymovies.models.ConfigurationResponse;
-import com.example.eric.mymovies.models.Movie;
-import com.example.eric.mymovies.models.MoviesResponse;
-
-import java.util.List;
+import com.example.eric.mymovies.webservices2.ConfigurationResponse;
+import com.example.eric.mymovies.webservices2.MoviesResponse;
 
 import retrofit2.Response;
 

@@ -16,10 +16,10 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.eric.mymovies.MyApp;
 import com.example.eric.mymovies.common.MyEndlessRVScrollListener;
 import com.example.eric.mymovies.R;
-import com.example.eric.mymovies.models.ConfigurationResponse;
+import com.example.eric.mymovies.webservices2.ConfigurationResponse;
 import com.example.eric.mymovies.models.ImageOptions;
 import com.example.eric.mymovies.models.Movie;
-import com.example.eric.mymovies.models.MoviesResponse;
+import com.example.eric.mymovies.webservices2.MoviesResponse;
 import com.example.eric.mymovies.utils.MyJsonResponseUtils;
 import com.example.eric.mymovies.webservices2.ConfigurationService;
 import com.example.eric.mymovies.webservices2.MovieService;
@@ -32,7 +32,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MovieSearchFragment extends Fragment implements MyEndlessRVScrollListener.OnScrollEndListener,
         MovieSearchMvpView {

@@ -1,5 +1,6 @@
-package com.example.eric.mymovies.models;
+package com.example.eric.mymovies.webservices2;
 
+import com.example.eric.mymovies.models.Movie;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

@@ -1,4 +1,4 @@
-package com.example.eric.mymovies;
+package com.example.eric.mymovies.common;
 
 import android.content.Context;
 

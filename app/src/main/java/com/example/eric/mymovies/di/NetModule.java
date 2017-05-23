@@ -1,4 +1,4 @@
-package com.example.eric.mymovies;
+package com.example.eric.mymovies.di;
 
 import android.app.Application;
 import android.content.SharedPreferences;

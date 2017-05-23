@@ -1,4 +1,4 @@
-package com.example.eric.mymovies;
+package com.example.eric.mymovies.di;
 
 import com.example.eric.mymovies.search.MovieSearchFragment;
 

@@ -1,4 +1,4 @@
-package com.example.eric.mymovies;
+package com.example.eric.mymovies.search;
 
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.eric.mymovies.search.MovieSearchFragment;
+import com.example.eric.mymovies.R;
 import com.orhanobut.logger.Logger;
 
 import butterknife.BindView;

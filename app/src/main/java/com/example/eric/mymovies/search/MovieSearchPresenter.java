@@ -3,18 +3,17 @@ package com.example.eric.mymovies.search;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.example.eric.mymovies.Presenter;
+import com.example.eric.mymovies.common.Presenter;
 import com.example.eric.mymovies.R;
 import com.example.eric.mymovies.webservices2.ConfigurationService;
 import com.example.eric.mymovies.webservices2.MovieService;
-import com.example.eric.mymovies.models.ConfigurationResponse;
-import com.example.eric.mymovies.models.MoviesResponse;
+import com.example.eric.mymovies.webservices2.ConfigurationResponse;
+import com.example.eric.mymovies.webservices2.MoviesResponse;
 import com.orhanobut.logger.Logger;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MovieSearchPresenter implements Presenter<MovieSearchMvpView> {
 
